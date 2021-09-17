@@ -16,3 +16,11 @@ Things for me to understand:
 
 - The correct workflow when using the Make commands and what they do
 - Fully understand the Reconciler code
+
+
+What I did wrong:
+
+- Wrong domain when using the operator-sdk (hub.docker.com/repository/docker/harleyb123 or just hub.docker.com?). Sucks you can't change the domain after init
+- Makefile needs to be changed manually (this sucks) for the BASE IMAGE and VERSION of the Controller
+- Need to look into the RBAC Permissions, I've now learnt that make manifests creates the RBAC for you!
+- Need to push up the controller to docker hub or any other registry

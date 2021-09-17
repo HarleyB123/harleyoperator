@@ -7,7 +7,26 @@ metadata:
   name: manager-role
 rules:
 - apiGroups:
-  - harleyb123
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - harleyb123.com
   resources:
   - sunrisesunsets
   verbs:
@@ -19,13 +38,13 @@ rules:
   - update
   - watch
 - apiGroups:
-  - harleyb123
+  - harleyb123.com
   resources:
   - sunrisesunsets/finalizers
   verbs:
   - update
 - apiGroups:
-  - harleyb123
+  - harleyb123.com
   resources:
   - sunrisesunsets/status
   verbs:

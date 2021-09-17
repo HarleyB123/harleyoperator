@@ -1,4 +1,4 @@
-domain: harleyb123.com
+domain: harleyb123
 layout:
 - go.kubebuilder.io/v3
 plugins:
@@ -11,7 +11,7 @@ resources:
     crdVersion: v1
     namespaced: true
   controller: true
-  domain: harleyb123.com
+  domain: harleyb123
   kind: SunriseSunset
   path: github.com/HarleyB123/harleykubeoperator/api/v1alpha1
   version: v1alpha1

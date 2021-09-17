@@ -38,9 +38,11 @@ type SunriseSunsetReconciler struct {
 	Scheme *runtime.Scheme
 }
 
-//+kubebuilder:rbac:groups=harleyb123,resources=sunrisesunsets,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=harleyb123,resources=sunrisesunsets/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=harleyb123,resources=sunrisesunsets/finalizers,verbs=update
+//+kubebuilder:rbac:groups=harleyb123.com,resources=sunrisesunsets,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=harleyb123.com,resources=sunrisesunsets/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=harleyb123.com,resources=sunrisesunsets/finalizers,verbs=update
+//+kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;
 
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.9.2/pkg/reconcile
