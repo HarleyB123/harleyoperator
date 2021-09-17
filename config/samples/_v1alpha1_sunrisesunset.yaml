@@ -1,0 +1,7 @@
+apiVersion: harleyb123.com/v1alpha1
+kind: SunriseSunset
+metadata:
+  name: sunrisesunset-sample
+spec:
+  # Add fields here
+  size: 18

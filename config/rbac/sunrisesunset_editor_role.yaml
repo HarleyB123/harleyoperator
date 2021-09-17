@@ -1,0 +1,24 @@
+# permissions for end users to edit sunrisesunsets.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: sunrisesunset-editor-role
+rules:
+- apiGroups:
+  - harleyb123.com
+  resources:
+  - sunrisesunsets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - harleyb123.com
+  resources:
+  - sunrisesunsets/status
+  verbs:
+  - get

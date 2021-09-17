@@ -1,0 +1,20 @@
+# permissions for end users to view sunrisesunsets.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: sunrisesunset-viewer-role
+rules:
+- apiGroups:
+  - harleyb123.com
+  resources:
+  - sunrisesunsets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - harleyb123.com
+  resources:
+  - sunrisesunsets/status
+  verbs:
+  - get
