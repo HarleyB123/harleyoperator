@@ -16,6 +16,8 @@ Things for me to understand:
 
 - The correct workflow when using the Make commands and what they do
 - Fully understand the Reconciler code
+- Understand the local dev workflow, currently building image, pushing image, minikube start, make deploy, kubectl apply and then check. Probably a faster method of iterating logic.
+- Testing the Operator?
 
 
 What I did wrong:
