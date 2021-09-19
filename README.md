@@ -23,4 +23,4 @@ What I did wrong:
 - Wrong domain when using the operator-sdk (hub.docker.com/repository/docker/harleyb123 or just hub.docker.com?). Sucks you can't change the domain after init
 - Makefile needs to be changed manually (this sucks) for the BASE IMAGE and VERSION of the Controller
 - Need to look into the RBAC Permissions and their manifests, I've now learnt that make manifests creates the RBAC for you!
-- Need to push up the controller to docker hub or any other registry
+- Need to push up the **controller** to docker hub or any other registry
