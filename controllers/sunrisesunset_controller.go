@@ -24,6 +24,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/apimachinery/pkg/util/intstr"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
@@ -42,6 +43,7 @@ type SunriseSunsetReconciler struct {
 //+kubebuilder:rbac:groups=harleyb123.com,resources=sunrisesunsets/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=harleyb123.com,resources=sunrisesunsets/finalizers,verbs=update
 //+kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=core,resources=services,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;
 
 // For more details, check Reconcile and its Result here:
@@ -86,10 +88,48 @@ func (r *SunriseSunsetReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		}
 		return ctrl.Result{Requeue: true}, nil
 	}
+
+	// Check if the service already exists, if not create a new service.
+	foundServ := &corev1.Service{}
+	err = r.Get(ctx, types.NamespacedName{Name: v.Name, Namespace: v.Namespace}, foundServ)
+	if err != nil {
+		if errors.IsNotFound(err) {
+			serv := r.serviceForSunrise(v)
+			if err = r.Create(ctx, serv); err != nil {
+				return ctrl.Result{}, err
+			}
+			return ctrl.Result{Requeue: true}, nil
+		} else {
+			return ctrl.Result{}, err
+		}
+	}
+
 	return ctrl.Result{}, nil
 }
 
-// deploymentForMemcached returns a Deployment object for data from m.
+func (r *SunriseSunsetReconciler) serviceForSunrise(m *harleyb123v1alpha1.SunriseSunset) *corev1.Service {
+	lbls := labelsForApp(m.Name)
+	serv := &corev1.Service{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      m.Name,
+			Namespace: m.Namespace,
+		},
+		Spec: corev1.ServiceSpec{
+			Selector: lbls,
+			Ports: []corev1.ServicePort{{
+				Protocol:   corev1.ProtocolTCP,
+				Port:       5000,
+				TargetPort: intstr.FromInt(5000),
+				NodePort:   30686,
+			}},
+			Type: corev1.ServiceTypeNodePort,
+		},
+	}
+	controllerutil.SetControllerReference(m, serv, r.Scheme)
+	return serv
+}
+
+// deploymentForSunrise returns a Deployment object for data from m.
 func (r *SunriseSunsetReconciler) deploymentForSunrise(m *harleyb123v1alpha1.SunriseSunset) *appsv1.Deployment {
 	lbls := labelsForApp(m.Name)
 	replicas := m.Spec.Size
