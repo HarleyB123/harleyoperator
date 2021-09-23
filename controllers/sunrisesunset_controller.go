@@ -89,6 +89,19 @@ func (r *SunriseSunsetReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		return ctrl.Result{Requeue: true}, nil
 	}
 
+	// Ensure the deployment title is the same as the spec
+	title := v.Spec.Title
+	existing := (*found).Spec.Template.Spec.Containers[0].Env[0].Value
+	if title != existing {
+		(*found).Spec.Template.Spec.Containers[0].Env[0].Value = title
+		err = r.Update(context.TODO(), found)
+		if err != nil {
+			return ctrl.Result{}, err
+		}
+		// Spec updated - return and requeue
+		return ctrl.Result{Requeue: true}, nil
+	}
+
 	// Check if the service already exists, if not create a new service.
 	foundServ := &corev1.Service{}
 	err = r.Get(ctx, types.NamespacedName{Name: v.Name, Namespace: v.Namespace}, foundServ)
@@ -133,6 +146,13 @@ func (r *SunriseSunsetReconciler) serviceForSunrise(m *harleyb123v1alpha1.Sunris
 func (r *SunriseSunsetReconciler) deploymentForSunrise(m *harleyb123v1alpha1.SunriseSunset) *appsv1.Deployment {
 	lbls := labelsForApp(m.Name)
 	replicas := m.Spec.Size
+	env := []corev1.EnvVar{}
+	if m.Spec.Title != "" {
+		env = append(env, corev1.EnvVar{
+			Name:  "SUNRISE_SUNSET_TITLE",
+			Value: m.Spec.Title,
+		})
+	}
 
 	dep := &appsv1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{
@@ -156,6 +176,7 @@ func (r *SunriseSunsetReconciler) deploymentForSunrise(m *harleyb123v1alpha1.Sun
 							ContainerPort: 5000,
 							Name:          "sunset",
 						}},
+						Env: env,
 					}},
 				},
 			},

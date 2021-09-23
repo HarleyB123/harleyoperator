@@ -41,8 +41,11 @@ spec:
                   to remove/update
                 format: int32
                 type: integer
+              title:
+                type: string
             required:
             - size
+            - title
             type: object
           status:
             description: SunriseSunsetStatus defines the observed state of SunriseSunset
